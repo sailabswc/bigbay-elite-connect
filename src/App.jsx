@@ -20,6 +20,7 @@ import LiveMonitor from '@/pages/LiveMonitor';
 import FamilyPortal from '@/pages/FamilyPortal';
 import Crew from '@/pages/Crew';
 import Finance from '@/pages/Finance';
+import Support from '@/pages/Support';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -61,6 +62,7 @@ const AuthenticatedApp = () => {
           <Route path="/family" element={<FamilyPortal />} />
           <Route path="/crew" element={<Crew />} />
           <Route path="/finance" element={<Finance />} />
+          <Route path="/support" element={<Support />} />
         </Route>
       </Route>
       <Route path="*" element={<PageNotFound />} />

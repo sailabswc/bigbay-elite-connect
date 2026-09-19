@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation, Outlet } from "react-router-dom";
-import { Waves, LayoutDashboard, CalendarDays, UserPlus, Radio, Users, HeartHandshake, Banknote, ShieldAlert } from "lucide-react";
+import { Waves, LayoutDashboard, CalendarDays, UserPlus, Radio, Users, HeartHandshake, Banknote, ShieldAlert, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV = [
@@ -11,6 +11,7 @@ const NAV = [
   { to: "/crew", label: "Support Crew", icon: Users },
   { to: "/family", label: "Family Portal", icon: HeartHandshake },
   { to: "/finance", label: "Finance & Sponsors", icon: Banknote },
+  { to: "/support", label: "Support Assistant", icon: Sparkles },
 ];
 
 export default function Layout() {
