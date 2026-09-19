@@ -24,6 +24,7 @@ import Finance from '@/pages/Finance';
 import Support from '@/pages/Support';
 import SplashScreen from '@/components/SplashScreen';
 import Chat from '@/pages/Chat';
+import LiveData from '@/pages/LiveData';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -70,6 +71,7 @@ const AuthenticatedApp = () => {
           <Route path="/finance" element={<Finance />} />
           <Route path="/support" element={<Support />} />
           <Route path="/chat" element={<Chat />} />
+          <Route path="/intelligence" element={<LiveData />} />
         </Route>
       </Route>
       <Route path="*" element={<PageNotFound />} />
