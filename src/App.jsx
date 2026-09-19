@@ -23,6 +23,7 @@ import Crew from '@/pages/Crew';
 import Finance from '@/pages/Finance';
 import Support from '@/pages/Support';
 import SplashScreen from '@/components/SplashScreen';
+import Chat from '@/pages/Chat';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -68,6 +69,7 @@ const AuthenticatedApp = () => {
           <Route path="/crew" element={<Crew />} />
           <Route path="/finance" element={<Finance />} />
           <Route path="/support" element={<Support />} />
+          <Route path="/chat" element={<Chat />} />
         </Route>
       </Route>
       <Route path="*" element={<PageNotFound />} />
