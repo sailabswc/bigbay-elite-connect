@@ -1,0 +1,130 @@
+{
+  "name": "SafetyScreening",
+  "type": "object",
+  "properties": {
+    "swimmer_id": {
+      "type": "string"
+    },
+    "event_id": {
+      "type": "string"
+    },
+    "questionnaire": {
+      "type": "object",
+      "properties": {
+        "cardiac_history": {
+          "type": "boolean"
+        },
+        "chest_pain_exertion": {
+          "type": "boolean"
+        },
+        "fainting_history": {
+          "type": "boolean"
+        },
+        "asthma": {
+          "type": "boolean"
+        },
+        "diabetes": {
+          "type": "boolean"
+        },
+        "hypertension": {
+          "type": "boolean"
+        },
+        "recent_illness": {
+          "type": "boolean"
+        },
+        "cold_water_shock_history": {
+          "type": "boolean"
+        },
+        "hypothermia_history": {
+          "type": "boolean"
+        },
+        "swims_per_month": {
+          "type": "integer"
+        },
+        "longest_cold_swim_minutes": {
+          "type": "integer"
+        },
+        "acclimatization_sessions_30d": {
+          "type": "integer"
+        },
+        "bmi_estimate": {
+          "type": "number"
+        },
+        "resting_hr": {
+          "type": "integer"
+        }
+      }
+    },
+    "risk_score": {
+      "type": "number",
+      "default": 0
+    },
+    "risk_level": {
+      "type": "string",
+      "enum": [
+        "low",
+        "moderate",
+        "high",
+        "critical"
+      ],
+      "default": "low"
+    },
+    "hypothermia_risk": {
+      "type": "string",
+      "enum": [
+        "low",
+        "moderate",
+        "high",
+        "severe"
+      ],
+      "default": "low"
+    },
+    "cardiac_risk": {
+      "type": "string",
+      "enum": [
+        "low",
+        "moderate",
+        "high",
+        "severe"
+      ],
+      "default": "low"
+    },
+    "ai_assessment": {
+      "type": "string"
+    },
+    "recommendations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "conditions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "decision": {
+      "type": "string",
+      "enum": [
+        "cleared",
+        "conditional",
+        "deferred",
+        "declined"
+      ],
+      "default": "cleared"
+    },
+    "reviewer": {
+      "type": "string"
+    },
+    "screened_date": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "swimmer_id",
+    "risk_level",
+    "decision"
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "name": "SafetyAlert",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "swimmer_id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "hypothermia",
+        "lost_swimmer",
+        "medical",
+        "withdrawal",
+        "equipment",
+        "weather",
+        "marine_life",
+        "other"
+      ],
+      "default": "medical"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "info",
+        "warning",
+        "urgent",
+        "critical"
+      ],
+      "default": "warning"
+    },
+    "message": {
+      "type": "string"
+    },
+    "location_lat": {
+      "type": "number"
+    },
+    "location_lng": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "acknowledged",
+        "resolved",
+        "false_alarm"
+      ],
+      "default": "active"
+    },
+    "acknowledged_by": {
+      "type": "string"
+    },
+    "created_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "resolved_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "resolution": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "event_id",
+    "type",
+    "severity",
+    "status"
+  ]
+}

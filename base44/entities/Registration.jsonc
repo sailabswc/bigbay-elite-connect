@@ -1,0 +1,81 @@
+{
+  "name": "Registration",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "swimmer_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending_screening",
+        "screened",
+        "cleared",
+        "conditional",
+        "payment_due",
+        "paid",
+        "checked_in",
+        "withdrawn",
+        "dnf",
+        "finished"
+      ],
+      "default": "pending_screening"
+    },
+    "payment_status": {
+      "type": "string",
+      "enum": [
+        "none",
+        "pending",
+        "paid",
+        "refunded",
+        "failed"
+      ],
+      "default": "none"
+    },
+    "amount": {
+      "type": "number"
+    },
+    "registered_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "wave": {
+      "type": "string",
+      "enum": [
+        "elite",
+        "experienced",
+        "open",
+        "wetsuit"
+      ],
+      "default": "open"
+    },
+    "bib_number": {
+      "type": "string"
+    },
+    "waiver_accepted": {
+      "type": "boolean",
+      "default": false
+    },
+    "emergency_consent": {
+      "type": "boolean",
+      "default": false
+    },
+    "finish_time_minutes": {
+      "type": "number"
+    },
+    "placement": {
+      "type": "integer"
+    },
+    "withdrawal_reason": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "event_id",
+    "swimmer_id",
+    "status"
+  ]
+}

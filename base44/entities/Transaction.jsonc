@@ -1,0 +1,69 @@
+{
+  "name": "Transaction",
+  "type": "object",
+  "properties": {
+    "reference": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "entry_fee",
+        "donation",
+        "sponsorship",
+        "merchandise",
+        "refund"
+      ],
+      "default": "entry_fee"
+    },
+    "event_id": {
+      "type": "string"
+    },
+    "swimmer_id": {
+      "type": "string"
+    },
+    "registration_id": {
+      "type": "string"
+    },
+    "sponsor_id": {
+      "type": "string"
+    },
+    "amount": {
+      "type": "number"
+    },
+    "currency": {
+      "type": "string",
+      "default": "ZAR"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "completed",
+        "failed",
+        "refunded"
+      ],
+      "default": "pending"
+    },
+    "method": {
+      "type": "string",
+      "enum": [
+        "card",
+        "eft",
+        "stripe",
+        "cash",
+        "sponsor_invoice"
+      ],
+      "default": "card"
+    },
+    "paid_date": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "type",
+    "amount",
+    "status"
+  ]
+}

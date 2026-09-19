@@ -1,0 +1,61 @@
+{
+  "name": "LiveTrack",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "swimmer_id": {
+      "type": "string"
+    },
+    "bib_number": {
+      "type": "string"
+    },
+    "lat": {
+      "type": "number"
+    },
+    "lng": {
+      "type": "number"
+    },
+    "speed_kph": {
+      "type": "number"
+    },
+    "heading": {
+      "type": "number"
+    },
+    "heart_rate": {
+      "type": "integer"
+    },
+    "water_temp_c": {
+      "type": "number"
+    },
+    "battery_pct": {
+      "type": "integer"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "tracking",
+        "finished",
+        "withdrawn",
+        "signal_lost",
+        "not_started"
+      ],
+      "default": "tracking"
+    },
+    "progress_pct": {
+      "type": "number",
+      "default": 0
+    },
+    "last_ping": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "event_id",
+    "swimmer_id",
+    "lat",
+    "lng"
+  ]
+}

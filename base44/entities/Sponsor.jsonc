@@ -1,0 +1,52 @@
+{
+  "name": "Sponsor",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "tier": {
+      "type": "string",
+      "enum": [
+        "title",
+        "platinum",
+        "gold",
+        "silver",
+        "bronze",
+        "partner"
+      ],
+      "default": "partner"
+    },
+    "logo_url": {
+      "type": "string"
+    },
+    "contribution": {
+      "type": "number",
+      "default": 0
+    },
+    "currency": {
+      "type": "string",
+      "default": "ZAR"
+    },
+    "events_sponsored": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "contact_name": {
+      "type": "string"
+    },
+    "contact_email": {
+      "type": "string"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "name",
+    "tier"
+  ]
+}

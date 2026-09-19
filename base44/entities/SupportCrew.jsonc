@@ -1,0 +1,66 @@
+{
+  "name": "SupportCrew",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "paddler",
+        "pilot",
+        "observer",
+        "lifeguard",
+        "medic",
+        "skipper",
+        "safety_officer"
+      ],
+      "default": "paddler"
+    },
+    "qualifications": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "phone": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "assigned_event_id": {
+      "type": "string"
+    },
+    "assigned_swimmer_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "available",
+        "assigned",
+        "on_water",
+        "standby",
+        "off_duty"
+      ],
+      "default": "available"
+    },
+    "experience_years": {
+      "type": "integer",
+      "default": 0
+    },
+    "vessel": {
+      "type": "string"
+    },
+    "certifications_expiry": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "required": [
+    "name",
+    "role"
+  ]
+}
