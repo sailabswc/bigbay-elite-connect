@@ -51,6 +51,13 @@ module.exports = {
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
   			},
+  			ocean: {
+  				DEFAULT: 'hsl(var(--ocean))',
+  				deep: 'hsl(var(--ocean-deep))',
+  				glow: 'hsl(var(--ocean-glow))'
+  			},
+  			coral: 'hsl(var(--coral))',
+  			sand: 'hsl(var(--sand))',
   			sidebar: {
   				DEFAULT: 'hsl(var(--sidebar-background))',
   				foreground: 'hsl(var(--sidebar-foreground))',
