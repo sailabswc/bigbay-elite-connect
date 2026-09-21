@@ -1,5 +1,5 @@
 const isNode = typeof window === 'undefined';
-const TOKEN_STORAGE_KEY = 'bigbay_local_runtime_token';
+const TOKEN_STORAGE_KEY = 'bigbay_local_runtime:token';
 
 const isClearAccessTokenRequested = () =>
   !isNode && new URLSearchParams(window.location.search).get('clear_access_token') === 'true';

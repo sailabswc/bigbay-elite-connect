@@ -333,6 +333,7 @@ const entities = {
 const persistedUserStoreKey = `${STORAGE_PREFIX}:users`;
 const persistedSessionKey = `${STORAGE_PREFIX}:session`;
 const persistedOtpKey = `${STORAGE_PREFIX}:otp`;
+const persistedResetKey = `${STORAGE_PREFIX}:reset`;
 const persistedConversationsKey = `${STORAGE_PREFIX}:conversations`;
 
 const secureUser = (user) => ({
@@ -366,6 +367,8 @@ const setSessionUser = (user) => writeStorage(persistedSessionKey, user);
 
 const getOtpMap = () => readStorage(persistedOtpKey, {});
 const setOtpMap = (nextMap) => writeStorage(persistedOtpKey, nextMap);
+const getResetMap = () => readStorage(persistedResetKey, {});
+const setResetMap = (nextMap) => writeStorage(persistedResetKey, nextMap);
 
 const auth = {
   async loginViaEmailPassword(email, password) {
@@ -410,10 +413,10 @@ const auth = {
     const nextUsers = [...users, user];
     writeStorage(persistedUserStoreKey, nextUsers);
     writeStorage(`${STORAGE_PREFIX}:User`, nextUsers);
-    const otpMap = getOtpMap();
-    otpMap[user.email.toLowerCase()] = '123456';
-    setOtpMap(otpMap);
-    return { status: 'registered', user: secureUser(user) };
+    const token = createSessionToken();
+    setSessionUser(secureUser(user));
+    writeStorage(`${STORAGE_PREFIX}:token`, token);
+    return { status: 'registered', access_token: token, user: secureUser(user) };
   },
 
   async verifyOtp({ email, otpCode }) {
@@ -447,16 +450,36 @@ const auth = {
     if (!normalizedEmail) {
       throw new Error('Email is required');
     }
-    return { status: 'sent', email: normalizedEmail };
+    const user = ensureUsers().find((entry) => entry.email.toLowerCase() === normalizedEmail);
+    if (!user) {
+      throw new Error('No local account exists for that email');
+    }
+    const resetToken = createSessionToken();
+    const resetMap = getResetMap();
+    resetMap[resetToken] = normalizedEmail;
+    setResetMap(resetMap);
+    return { status: 'ready', email: normalizedEmail, resetToken };
   },
 
   async resetPassword({ resetToken, newPassword }) {
     if (!resetToken || !newPassword) {
       throw new Error('Reset token and password are required');
     }
+    const resetMap = getResetMap();
+    const normalizedEmail = resetMap[resetToken];
+    if (!normalizedEmail) {
+      throw new Error('This local reset link is invalid or expired');
+    }
+    const users = ensureUsers();
+    const updatedUsers = users.map((entry) => entry.email.toLowerCase() === normalizedEmail
+      ? { ...entry, password: String(newPassword), updated_at: new Date().toISOString() }
+      : entry);
+    writeStorage(persistedUserStoreKey, updatedUsers);
+    writeStorage(`${STORAGE_PREFIX}:User`, updatedUsers);
+    delete resetMap[resetToken];
+    setResetMap(resetMap);
     return { status: 'updated' };
   },
-
   async me() {
     const user = getSessionUser();
     if (!user) {

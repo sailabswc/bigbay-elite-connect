@@ -59,6 +59,9 @@ The app ships with built-in local demo accounts so the interface can be explored
 - Admin: admin@bigbayconnect.local / admin123
 - Operations: amber@bigbayconnect.local / demo123
 - Support: jiro@bigbayconnect.local / demo123
+- New registrations sign in immediately on the current device; password recovery creates a local reset link instead of sending email.
+
+These credentials and local password flows are for demos and development only. A hosted production rollout should replace them with server-side identity, secure password storage, email delivery, and account recovery controls.
 
 ## Architecture notes
 
