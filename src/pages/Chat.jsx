@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { MessagesSquare, Plus } from "lucide-react";
-import { base44 } from "@/api/base44Client";
+import { appRuntime } from "@/api/localRuntime";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import ChatRoomList from "@/components/chat/ChatRoomList";
@@ -39,13 +39,13 @@ export default function Chat() {
   useEffect(() => {
     let alive = true;
     (async () => {
-      const me = await base44.auth.me();
+      const me = await appRuntime.auth.me();
       if (!alive) return;
       setUser(me);
       setLastRead(JSON.parse(localStorage.getItem(READ_KEY) || "{}"));
       const [roomList, userList] = await Promise.all([
-        base44.entities.ChatRoom.list("-last_message_at", 100),
-        base44.entities.User.list(),
+        appRuntime.entities.ChatRoom.list("-last_message_at", 100),
+        appRuntime.entities.User.list(),
       ]);
       if (!alive) return;
       setRooms(roomList.filter((r) => (r.member_ids || []).includes(me.id)));
@@ -65,7 +65,7 @@ export default function Chat() {
     }
     let alive = true;
     setMsgsLoading(true);
-    base44.entities.ChatMessage.filter({ room_id: activeId }, "created_date", 300)
+    appRuntime.entities.ChatMessage.filter({ room_id: activeId }, "created_date", 300)
       .then((list) => {
         if (alive) {
           setMessages(list);
@@ -80,7 +80,7 @@ export default function Chat() {
 
   // Realtime: incoming messages across all my chatrooms
   useEffect(() => {
-    const unsubscribe = base44.entities.ChatMessage.subscribe((event) => {
+    const unsubscribe = appRuntime.entities.ChatMessage.subscribe((event) => {
       if (event.type !== "create") return;
       const m = event.data;
       if (m.room_id === activeRef.current) {
@@ -125,7 +125,7 @@ export default function Chat() {
       const body = (payload.body || "").trim();
       if (!body && !payload.attachment_url) return;
 
-      const created = await base44.entities.ChatMessage.create({
+      const created = await appRuntime.entities.ChatMessage.create({
         room_id: room.id,
         room_member_ids: room.member_ids || [],
         sender_id: user.id,
@@ -147,7 +147,7 @@ export default function Chat() {
         last_sender_name: user.full_name || user.email,
       };
       setRooms((prev) => prev.map((r) => (r.id === room.id ? { ...r, ...patch } : r)));
-      await base44.entities.ChatRoom.update(room.id, patch);
+      await appRuntime.entities.ChatRoom.update(room.id, patch);
     },
     [rooms, user]
   );
@@ -167,7 +167,7 @@ export default function Chat() {
         openRoom(existing.id);
         return;
       }
-      const created = await base44.entities.ChatRoom.create({
+      const created = await appRuntime.entities.ChatRoom.create({
         name: other.full_name || other.email,
         kind: "direct",
         member_ids: [user.id, other.id],
@@ -183,7 +183,7 @@ export default function Chat() {
   const createGroup = useCallback(
     async (name, members) => {
       if (!user || !name.trim() || members.length === 0) return;
-      const created = await base44.entities.ChatRoom.create({
+      const created = await appRuntime.entities.ChatRoom.create({
         name: name.trim(),
         kind: "group",
         topic: "Created in Big Bay Connect",

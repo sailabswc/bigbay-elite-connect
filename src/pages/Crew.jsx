@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { appRuntime } from "@/api/localRuntime";
 import { Users, LifeBuoy, ShieldCheck, Award, Phone } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import { formatDate } from "@/lib/format";
@@ -29,7 +29,7 @@ export default function Crew() {
 
   useEffect(() => {
     (async () => {
-      try { setCrew(await base44.entities.SupportCrew.list()); }
+      try { setCrew(await appRuntime.entities.SupportCrew.list()); }
       catch (e) { console.error(e); }
       finally { setLoading(false); }
     })();

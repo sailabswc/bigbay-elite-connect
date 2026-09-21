@@ -1,6 +1,5 @@
 import React from "react";
 import { cn } from "@/lib/utils";
-import { Image } from "@/components/ui/image";
 
 export const initials = (name) =>
   (name || "?")
@@ -18,7 +17,9 @@ export const shortTime = (d) => {
   if (date.toDateString() === now.toDateString()) {
     return date.toLocaleTimeString("en-ZA", { hour: "2-digit", minute: "2-digit" });
   }
-  if ((now - date) / 86400000 < 7) {
+  const dateMs = date.getTime();
+  const nowMs = now.getTime();
+  if ((nowMs - dateMs) / 86400000 < 7) {
     return date.toLocaleDateString("en-ZA", { weekday: "short" });
   }
   return date.toLocaleDateString("en-ZA", { day: "2-digit", month: "2-digit" });
@@ -70,7 +71,7 @@ export default function ChatRoomList({ rooms, activeId, onSelect, loading, unrea
             >
               {room.avatar_url ? (
                 <div className="h-12 w-12 shrink-0 overflow-hidden rounded-full">
-                  <Image src={room.avatar_url} className="h-full w-full object-cover" alt={room.name} />
+                  <img src={room.avatar_url} className="h-full w-full object-cover" alt={room.name} />
                 </div>
               ) : (
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full ocean-gradient text-sm font-semibold text-white">

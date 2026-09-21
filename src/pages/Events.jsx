@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { base44 } from "@/api/base44Client";
+import { appRuntime } from "@/api/localRuntime";
 import { CalendarDays, MapPin, Waves, Thermometer, Users, ArrowRight, Plus } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import { formatDate, formatCurrency, SWIM_TYPES, EVENT_STATUS } from "@/lib/format";
@@ -22,7 +22,7 @@ export default function Events() {
   useEffect(() => {
     (async () => {
       try {
-        const ev = await base44.entities.Event.list("start_date");
+        const ev = await appRuntime.entities.Event.list("start_date");
         setEvents(ev);
       } catch (e) { console.error(e); }
       finally { setLoading(false); }

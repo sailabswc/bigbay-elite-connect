@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { base44 } from "@/api/base44Client";
-import { ArrowLeft, MapPin, Waves, Thermometer, Users, CalendarDays, ShieldCheck, Banknote, AlertTriangle, LifeBuoy, Trophy } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { appRuntime } from "@/api/localRuntime";
+import { ArrowLeft, MapPin, Waves, Thermometer, Users, CalendarDays, ShieldCheck, Banknote, AlertTriangle, LifeBuoy } from "lucide-react";
 import RiskBadge from "@/components/RiskBadge";
-import { formatDate, formatCurrency, SWIM_TYPES, EVENT_STATUS, ageFromDob } from "@/lib/format";
+import { formatDate, formatCurrency, SWIM_TYPES, EVENT_STATUS } from "@/lib/format";
 
 const statusStyle = {
   pending_screening: "bg-slate-100 text-slate-600",
@@ -32,18 +31,18 @@ export default function EventDetail() {
     if (!id) return;
     (async () => {
       try {
-        const ev = await base44.entities.Event.get(id);
+        const ev = await appRuntime.entities.Event.get(id);
         setEvent(ev);
         const [rg, al, cr] = await Promise.all([
-          base44.entities.Registration.filter({ event_id: id }),
-          base44.entities.SafetyAlert.filter({ event_id: id }),
-          base44.entities.SupportCrew.filter({ assigned_event_id: id }),
+          appRuntime.entities.Registration.filter({ event_id: id }),
+          appRuntime.entities.SafetyAlert.filter({ event_id: id }),
+          appRuntime.entities.SupportCrew.filter({ assigned_event_id: id }),
         ]);
         setRegistrations(rg);
         setAlerts(al);
         setCrew(cr);
         const swimmerIds = [...new Set(rg.map(r => r.swimmer_id))];
-        const sw = await Promise.all(swimmerIds.map(sid => base44.entities.Swimmer.get(sid).catch(() => null)));
+        const sw = await Promise.all(swimmerIds.map(sid => appRuntime.entities.Swimmer.get(sid).catch(() => null)));
         setSwimmers(sw.filter(Boolean));
       } catch (e) { console.error(e); }
       finally { setLoading(false); }

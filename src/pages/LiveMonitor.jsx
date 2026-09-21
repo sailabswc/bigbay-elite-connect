@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { base44 } from "@/api/base44Client";
-import { MapContainer, TileLayer, CircleMarker, Popup, Polyline } from "react-leaflet";
+import { appRuntime } from "@/api/localRuntime";
+import { MapContainer, TileLayer, CircleMarker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { Radio, AlertTriangle, Heart, Battery, Gauge, Waves, Activity, ShieldAlert, MapPin } from "lucide-react";
+import { Radio, AlertTriangle, Heart, Battery, Gauge, Activity, ShieldAlert } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
-import RiskBadge, { SeverityBadge } from "@/components/RiskBadge";
+import { SeverityBadge } from "@/components/RiskBadge";
 import { timeAgo } from "@/lib/format";
 
 const swimmerColor = (track) => {
@@ -26,10 +26,10 @@ export default function LiveMonitor() {
     (async () => {
       try {
         const [tr, al, sw, ev] = await Promise.all([
-          base44.entities.LiveTrack.list(),
-          base44.entities.SafetyAlert.list(),
-          base44.entities.Swimmer.list(),
-          base44.entities.Event.list(),
+          appRuntime.entities.LiveTrack.list(),
+          appRuntime.entities.SafetyAlert.list(),
+          appRuntime.entities.Swimmer.list(),
+          appRuntime.entities.Event.list(),
         ]);
         setTracks(tr);
         setAlerts(al);
@@ -39,7 +39,7 @@ export default function LiveMonitor() {
       finally { setLoading(false); }
     })();
     // subscribe to live updates
-    const unsub = base44.entities.LiveTrack.subscribe?.((event) => {
+    const unsub = appRuntime.entities.LiveTrack.subscribe?.((event) => {
       setTracks(prev => {
         const idx = prev.findIndex(t => t.swimmer_id === event.data?.swimmer_id);
         if (idx === -1) return [event.data, ...prev];

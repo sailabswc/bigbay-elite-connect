@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
+import { appRuntime } from "@/api/localRuntime";
 import { UserPlus, Waves, HeartPulse, Brain, CreditCard, CheckCircle2, ChevronRight, ChevronLeft, ShieldCheck, AlertCircle, Sparkles, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import RiskBadge from "@/components/RiskBadge";
 import PageHeader from "@/components/PageHeader";
-import { formatCurrency, formatDate, SWIM_TYPES } from "@/lib/format";
+import { formatCurrency, formatDate } from "@/lib/format";
 
 const STEPS = [
   { key: "event", label: "Choose Swim", icon: Waves },
@@ -48,7 +48,7 @@ export default function Onboarding() {
   useEffect(() => {
     (async () => {
       try {
-        const ev = await base44.entities.Event.list("start_date");
+        const ev = await appRuntime.entities.Event.list("start_date");
         setEvents(ev.filter(e => e.status === "open" || e.status === "screening"));
       } catch (e) { console.error(e); }
     })();
@@ -75,14 +75,14 @@ export default function Onboarding() {
         age: profile.dob ? Math.floor((Date.now() - new Date(profile.dob).getTime()) / (365.25 * 24 * 3600 * 1000)) : undefined,
       };
       const qPayload = { ...questionnaire, bmi_estimate: bmi };
-      const res = await base44.functions.invoke("aiSafetyScreening", {
+      const res = await appRuntime.functions.invoke("aiSafetyScreening", {
         swimmer: swimmerPayload, event: selectedEvent, questionnaire: qPayload
       });
       const data = res.data?.assessment || res.data;
       setAssessment(data);
 
       // persist swimmer + screening
-      const swimmerRec = await base44.entities.Swimmer.create({
+      const swimmerRec = await appRuntime.entities.Swimmer.create({
         full_name: profile.full_name, email: profile.email, phone: profile.phone, dob: profile.dob,
         gender: profile.gender, city: profile.city, weight_kg: +profile.weight_kg || undefined,
         height_cm: +profile.height_cm || undefined, wetsuit: profile.wetsuit,
@@ -101,7 +101,7 @@ export default function Onboarding() {
         screening_risk_score: data.risk_score, screening_risk_level: data.risk_level,
       });
       setSwimmerId(swimmerRec.id);
-      await base44.entities.SafetyScreening.create({
+      await appRuntime.entities.SafetyScreening.create({
         swimmer_id: swimmerRec.id, event_id: selectedEvent.id,
         questionnaire: qPayload, risk_score: data.risk_score, risk_level: data.risk_level,
         hypothermia_risk: data.hypothermia_risk, cardiac_risk: data.cardiac_risk,
@@ -118,7 +118,7 @@ export default function Onboarding() {
 
   const completePayment = async () => {
     try {
-      await base44.entities.Registration.create({
+      await appRuntime.entities.Registration.create({
         event_id: selectedEvent.id, swimmer_id: swimmerId,
         status: assessment?.decision === "cleared" ? "paid" : "conditional",
         payment_status: "paid", amount: selectedEvent.entry_fee,
@@ -126,7 +126,7 @@ export default function Onboarding() {
         wave: profile.wetsuit ? "wetsuit" : (profile.acclimatization_level === "elite" ? "elite" : "open"),
         waiver_accepted: true, emergency_consent: true,
       });
-      await base44.entities.Transaction.create({
+      await appRuntime.entities.Transaction.create({
         reference: `TXN-${Date.now()}`, type: "entry_fee", event_id: selectedEvent.id,
         swimmer_id: swimmerId, amount: selectedEvent.entry_fee, currency: "ZAR",
         status: "completed", method: "stripe", paid_date: new Date().toISOString(),

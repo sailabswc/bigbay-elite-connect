@@ -1,62 +1,77 @@
-# Base44 Project
+# Shelf Software
 
-Use this repository to run and edit the app locally, then publish changes back through Base44.
+Shelf Software is a local-first operations suite for event operators, safety teams, and coastal swim businesses that need dependable scheduling, compliance, crew coordination, and registration control without depending on a hosted backend.
 
-Any change pushed to the repo will also be reflected in the Base44 Builder.
+This repository contains the product prototype for a modern operations dashboard built around offline-safe local storage, reliable workflow UX, and hospitality-grade presentation for client conversations.
 
-## Prerequisites
+## Product position
 
-1. Clone the repository using the project's Git URL.
-2. Navigate to the project directory.
-3. Install dependencies: `npm install`.
-4. Install the Base44 CLI: `npm install -g base44@latest`.
-5. Install [Deno](https://docs.deno.com/runtime/getting_started/installation/) — the local Base44 backend runs on it.
+- Local-first by default: no remote auth provider or hosted data layer required to run the app.
+- Production-ready front-end: Vite + React build pipeline, standard browser runtime, and resilient mock data layer.
+- Operationally useful: event management, safety monitoring, finance, support workflows, and crew oversight in one interface.
+- Client-pitch friendly: written as a polished "Shelf Software" narrative rather than a technical scaffold.
 
-Run `base44 --help` (or see the [CLI reference](https://docs.base44.com/developers/references/cli/commands/introduction)) for the full command surface.
+## What this app does
 
-## Run Locally
+- Manage event calendars and swim operations.
+- Track athlete registrations, safety screening, and check-in status.
+- Monitor live safety alerts and incident workflow actions.
+- Support crew coordination, equipment review, and call-center style follow-up.
+- Keep the experience usable offline with local browser state persistence.
 
-Three commands, from the project root:
+## Local development
 
-```bash
-base44 login   # one-time per machine
-base44 link    # one-time per clone
-base44 dev     # local backend + frontend together
-```
+### Prerequisites
 
-Open the frontend URL that `base44 dev` prints (typically `http://localhost:5173`).
+- Node.js 18+
+- npm
 
-Notes:
-
-- **Every fresh clone needs `base44 link`.** It writes `base44/.app.jsonc` (the app-id pointer), which is deliberately gitignored. Your app id is in the Builder URL (`app.base44.com/apps/<id>/...`); `base44 link --help` shows the non-interactive flags.
-- **`base44 dev` runs the frontend for you** (via `site.serveCommand` in this repo's `base44/config.jsonc`) — never run `npm run dev` yourself: alone it serves a UI with no backend behind it (`[base44] Proxy not enabled`, every `/api` call fails), and alongside `base44 dev` the second Vite silently takes the next port and you end up looking at the wrong one.
-- **The app must be published at least once for the UI to load under `base44 dev`.** The frontend boots by fetching app settings from the hosted app; before the first publish that fails and every page redirects to login. The local API works regardless.
-- Entities, functions, and auth run locally — entity data is **in-memory only**, wiped when `base44 dev` restarts. Everything else (Core integrations, OAuth login) is forwarded to your deployed app. Full breakdown: [Local development overview](https://docs.base44.com/developers/backend/overview/local-dev/local-development-overview).
-
-## Frontend Only, Hosted Backend
-
-To work on just the frontend against your app's live hosted backend:
+### Run the app
 
 ```bash
-base44 dev --remote
+npm install
+npm run dev
 ```
 
-⚠️ In this mode writes go to your app's **production data** — plain `base44 dev` keeps everything local.
+Then open the local Vite URL in the browser, typically:
 
-## Publish Your Changes
+```text
+http://localhost:5173
+```
 
-After pushing your changes to git, open the Base44 dashboard and publish the app:
+### Production build
 
 ```bash
-base44 dashboard open
+npm run build
 ```
 
-This repo syncs to Base44 through git, so publish from the dashboard rather than `base44 deploy` — a CLI deploy ships your local tree directly, bypassing the sync, and the deployed state silently diverges from the repo.
+### Optional validation checks
 
-## Docs & Support
+```bash
+npm run lint
+npm run typecheck
+```
 
-GitHub integration: [https://docs.base44.com/developers/app-code/local-development/github](https://docs.base44.com/developers/app-code/local-development/github)
+## Demo access
 
-Local development: [https://docs.base44.com/developers/backend/overview/local-dev/local-development-overview](https://docs.base44.com/developers/backend/overview/local-dev/local-development-overview)
+The app ships with built-in local demo accounts so the interface can be explored immediately without external services.
 
-Support: [https://app.base44.com/support](https://app.base44.com/support)
+- Admin: admin@bigbayconnect.local / admin123
+- Operations: amber@bigbayconnect.local / demo123
+- Support: jiro@bigbayconnect.local / demo123
+
+## Architecture notes
+
+- Runtime data is served from `src/api/localRuntime.js`.
+- Browser-local persistence is used for auth state, entities, and user sessions.
+- The app is intentionally decoupled from hosted provider dependencies to keep it portable and resilient.
+
+## Client pitch summary
+
+Shelf Software is positioned as a compact, high-trust operations platform for teams that need visibility, safety controls, and operational speed without enterprise drag.
+
+It is designed to feel like a premium SaaS product while remaining simple to deploy, easy to customize, and safe to use in low-connectivity environments.
+
+## Related package
+
+See `SALES_PACKAGE.md` for a more polished client-facing sales narrative and product brief.

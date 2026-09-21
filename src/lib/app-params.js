@@ -1,28 +1,30 @@
-import { getAccessToken } from '@base44/sdk';
-
 const isNode = typeof window === 'undefined';
+const TOKEN_STORAGE_KEY = 'bigbay_local_runtime_token';
 
 const isClearAccessTokenRequested = () =>
-	!isNode && new URLSearchParams(window.location.search).get("clear_access_token") === 'true';
+  !isNode && new URLSearchParams(window.location.search).get('clear_access_token') === 'true';
 
 const clearStoredAccessToken = () => {
-	window.localStorage.removeItem('base44_access_token');
-	window.localStorage.removeItem('token');
-}
+  if (isNode) return;
+  window.localStorage.removeItem(TOKEN_STORAGE_KEY);
+  window.localStorage.removeItem('token');
+};
 
 const getAppParams = () => {
-	if (isClearAccessTokenRequested()) {
-		clearStoredAccessToken();
-	}
-	return {
-		appId: import.meta.env.VITE_BASE44_APP_ID,
-		token: getAccessToken(),
-		functionsVersion: import.meta.env.VITE_BASE44_FUNCTIONS_VERSION,
-		appBaseUrl: import.meta.env.VITE_BASE44_APP_BASE_URL,
-	}
-}
+  if (isClearAccessTokenRequested()) {
+    clearStoredAccessToken();
+  }
 
+  const token = !isNode ? (window.localStorage.getItem(TOKEN_STORAGE_KEY) || '') : '';
+
+  return {
+    appId: 'bigbay-local-runtime',
+    token,
+    functionsVersion: 'local-runtime',
+    appBaseUrl: !isNode ? window.location.origin : 'http://localhost:5173',
+  };
+};
 
 export const appParams = {
-	...getAppParams()
-}
+  ...getAppParams(),
+};

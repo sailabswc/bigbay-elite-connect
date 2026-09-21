@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { base44 } from "@/api/base44Client";
-import { Banknote, TrendingUp, Trophy, Receipt, Plus, ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { appRuntime } from "@/api/localRuntime";
+import { Banknote, TrendingUp, Trophy, Receipt, Plus } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import PageHeader from "@/components/PageHeader";
 import StatCard from "@/components/StatCard";
@@ -24,7 +24,7 @@ export default function Finance() {
   useEffect(() => {
     (async () => {
       try {
-        const [tx, sp] = await Promise.all([base44.entities.Transaction.list(), base44.entities.Sponsor.list()]);
+        const [tx, sp] = await Promise.all([appRuntime.entities.Transaction.list(), appRuntime.entities.Sponsor.list()]);
         setTransactions(tx); setSponsors(sp);
       } catch (e) { console.error(e); }
       finally { setLoading(false); }

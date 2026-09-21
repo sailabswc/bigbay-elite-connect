@@ -1,8 +1,6 @@
 import React, { useRef, useState } from "react";
 import { Loader2, Paperclip, Send, X } from "lucide-react";
-import { base44 } from "@/api/base44Client";
-import { Button } from "@/components/ui/button";
-import { Image } from "@/components/ui/image";
+import { appRuntime } from "@/api/localRuntime";
 
 export default function ChatComposer({ onSend, disabled }) {
   const [text, setText] = useState("");
@@ -32,7 +30,7 @@ export default function ChatComposer({ onSend, disabled }) {
     try {
       let attachment = {};
       if (file) {
-        const { file_url } = await base44.integrations.Core.UploadPublicFile({ file });
+        const { file_url } = await appRuntime.integrations.Core.UploadPublicFile({ file });
         attachment = {
           attachment_url: file_url,
           attachment_type: file.type.startsWith("image/") ? "image" : "file",
@@ -58,7 +56,7 @@ export default function ChatComposer({ onSend, disabled }) {
     <div className="border-t border-border bg-card p-3">
       {preview && (
         <div className="relative mb-2 inline-block">
-          <Image src={preview} className="h-20 w-20 rounded-xl object-cover" alt="Attachment preview" />
+          <img src={preview} className="h-20 w-20 rounded-xl object-cover" alt="Attachment preview" />
           <button
             type="button"
             onClick={clearFile}
@@ -85,16 +83,14 @@ export default function ChatComposer({ onSend, disabled }) {
           onChange={pick}
           className="hidden"
         />
-        <Button
+        <button
           type="button"
-          variant="ghost"
-          size="icon"
           aria-label="Attach file"
           onClick={() => inputRef.current?.click()}
-          className="shrink-0 rounded-full"
+          className="shrink-0 rounded-full border border-input bg-background p-2 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
         >
           <Paperclip className="h-5 w-5" />
-        </Button>
+        </button>
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
@@ -103,16 +99,15 @@ export default function ChatComposer({ onSend, disabled }) {
           placeholder="Type a message"
           className="max-h-32 min-h-[42px] flex-1 resize-none rounded-2xl border border-input bg-background px-4 py-2.5 text-sm outline-none focus-visible:ring-1 focus-visible:ring-ring"
         />
-        <Button
+        <button
           type="button"
-          size="icon"
           aria-label="Send message"
           onClick={submit}
           disabled={disabled || sending}
-          className="shrink-0 rounded-full"
+          className="shrink-0 rounded-full bg-primary p-2.5 text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {sending ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
-        </Button>
+        </button>
       </div>
     </div>
   );

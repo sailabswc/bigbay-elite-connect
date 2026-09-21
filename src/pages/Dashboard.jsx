@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { base44 } from "@/api/base44Client";
-import { Waves, Users, CalendarDays, Banknote, ShieldAlert, TrendingUp, Activity, AlertTriangle, Trophy, MapPin } from "lucide-react";
-import { LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, RadialBarChart, RadialBar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
+import { appRuntime } from "@/api/localRuntime";
+import { Waves, Users, Banknote, ShieldAlert, TrendingUp, Activity, AlertTriangle, Trophy, MapPin } from "lucide-react";
+import { AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, RadialBarChart, RadialBar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import StatCard from "@/components/StatCard";
 import RiskBadge from "@/components/RiskBadge";
-import { formatCurrency, formatDate, timeAgo, SWIM_TYPES, EVENT_STATUS } from "@/lib/format";
+import { formatCurrency, timeAgo } from "@/lib/format";
 
 const CHART_COLORS = ["hsl(205 85% 38%)", "hsl(190 85% 42%)", "hsl(7 78% 52%)", "hsl(43 80% 58%)", "hsl(262 60% 58%)"];
 
@@ -21,12 +21,12 @@ export default function Dashboard() {
     (async () => {
       try {
         const [ev, sw, rg, al, tx, sp] = await Promise.all([
-          base44.entities.Event.list(),
-          base44.entities.Swimmer.list(),
-          base44.entities.Registration.list(),
-          base44.entities.SafetyAlert.list(),
-          base44.entities.Transaction.list(),
-          base44.entities.Sponsor.list(),
+          appRuntime.entities.Event.list(),
+          appRuntime.entities.Swimmer.list(),
+          appRuntime.entities.Registration.list(),
+          appRuntime.entities.SafetyAlert.list(),
+          appRuntime.entities.Transaction.list(),
+          appRuntime.entities.Sponsor.list(),
         ]);
         setEvents(ev);
         setSwimmers(sw);
