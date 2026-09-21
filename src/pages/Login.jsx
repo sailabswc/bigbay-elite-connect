@@ -71,6 +71,10 @@ export default function Login() {
         </div>
       </div>
 
+      <div className="mb-4 rounded-lg bg-muted/50 p-3 text-sm text-muted-foreground">
+        Local demo accounts: admin@bigbayconnect.local / admin123 or amber@bigbayconnect.local / demo123.
+      </div>
+
       {error && (
         <div className="mb-4 p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
           {error}
