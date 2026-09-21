@@ -10,7 +10,8 @@
 // resolved path to be exactly one leading slash (no "//" prefix, no backslash).
 export function safeReturnTo() {
   const raw = new URLSearchParams(window.location.search).get("returnTo");
-  if (!raw) return "/";
+  const appBase = import.meta.env.BASE_URL || "/";
+  if (!raw) return appBase;
   try {
     const url = new URL(raw, window.location.origin);
     if (url.origin !== window.location.origin) return "/";
@@ -21,9 +22,9 @@ export function safeReturnTo() {
       url.searchParams.delete(p);
     }
     const path = url.pathname + url.search;
-    if (!path.startsWith("/") || path.startsWith("//") || path.includes("\\")) return "/";
-    return path;
+    if (!path.startsWith("/") || path.startsWith("//") || path.includes("\\")) return appBase;
+    return path === "/" ? appBase : path;
   } catch {
-    return "/";
+    return appBase;
   }
 }
