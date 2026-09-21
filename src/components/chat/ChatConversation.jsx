@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import { ArrowLeft, MessagesSquare, Users } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import MessageBubble from "./MessageBubble";
 import ChatComposer from "./ChatComposer";
 import { initials } from "./ChatRoomList";
@@ -66,9 +65,13 @@ export default function ChatConversation({ room, messages, currentUser, loading,
   return (
     <div className="flex h-full min-h-0 flex-col">
       <div className="flex items-center gap-3 border-b border-border bg-card px-3 py-2.5">
-        <Button variant="ghost" size="icon" className="lg:hidden" onClick={onBack}>
+        <button
+          type="button"
+          className="lg:hidden inline-flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+          onClick={onBack}
+        >
           <ArrowLeft className="h-5 w-5" />
-        </Button>
+        </button>
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full ocean-gradient text-xs font-semibold text-white">
           {initials(room.name)}
         </div>
@@ -107,7 +110,7 @@ export default function ChatConversation({ room, messages, currentUser, loading,
         <div ref={endRef} />
       </div>
 
-      <ChatComposer onSend={onSend} />
+      <ChatComposer onSend={onSend} disabled={loading} />
     </div>
   );
 }

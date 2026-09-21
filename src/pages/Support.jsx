@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
-import { base44 } from "@/api/base44Client";
+import { appRuntime } from "@/api/localRuntime";
 import { Send, Sparkles, Loader2, Phone, PanelLeft, X } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
@@ -28,7 +28,7 @@ export default function Support() {
 
   const loadConversations = useCallback(async () => {
     try {
-      const list = await base44.agents.listConversations({ agent_name: AGENT });
+      const list = await appRuntime.agents.listConversations({ agent_name: AGENT });
       setConversations(list);
       if (list[0]) setActiveId(list[0].id);
     } catch (e) {
@@ -45,10 +45,10 @@ export default function Support() {
     let unsub;
     (async () => {
       try {
-        const convo = await base44.agents.getConversation(activeId);
+        const convo = await appRuntime.agents.getConversation(activeId);
         setMessages(convo.messages || []);
       } catch (e) { console.error(e); }
-      unsub = base44.agents.subscribeToConversation(activeId, (data) => setMessages(data.messages || []));
+      unsub = appRuntime.agents.subscribeToConversation(activeId, (data) => setMessages(data.messages || []));
     })();
     return () => unsub && unsub();
   }, [activeId]);
@@ -59,7 +59,7 @@ export default function Support() {
 
   const newConversation = async () => {
     try {
-      const convo = await base44.agents.createConversation({
+      const convo = await appRuntime.agents.createConversation({
         agent_name: AGENT,
         metadata: { name: "Support chat", description: "Big Bay Events assistant" },
       });
@@ -78,7 +78,7 @@ export default function Support() {
       let convoId = activeId;
       let convo;
       if (!convoId) {
-        convo = await base44.agents.createConversation({
+        convo = await appRuntime.agents.createConversation({
           agent_name: AGENT,
           metadata: { name: content.slice(0, 40), description: "Big Bay Events assistant" },
         });
@@ -86,9 +86,9 @@ export default function Support() {
         setConversations((prev) => [convo, ...prev]);
         setActiveId(convoId);
       } else {
-        convo = await base44.agents.getConversation(convoId);
+        convo = await appRuntime.agents.getConversation(convoId);
       }
-      await base44.agents.addMessage(convo, { role: "user", content });
+      await appRuntime.agents.addMessage(convo, { role: "user", content });
     } catch (e) {
       console.error(e);
     } finally {
@@ -108,7 +108,7 @@ export default function Support() {
         icon={Sparkles}
         actions={
           <div className="flex items-center gap-2">
-            <a href={base44.agents.getWhatsAppConnectURL(AGENT)} target="_blank" rel="noreferrer">
+            <a href={appRuntime.agents.getWhatsAppConnectURL(AGENT)} target="_blank" rel="noreferrer">
               <Button variant="outline"><Phone className="w-4 h-4 mr-1.5" /> Connect WhatsApp</Button>
             </a>
           </div>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { base44 } from "@/api/base44Client";
+import { appRuntime } from "@/api/localRuntime";
 import { MapContainer, TileLayer, CircleMarker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { HeartHandshake, Heart, Gauge, Battery, MapPin, Bell, Share2, Phone, Clock } from "lucide-react";
@@ -19,10 +19,10 @@ export default function FamilyPortal() {
     (async () => {
       try {
         const [tr, sw, ev, al] = await Promise.all([
-          base44.entities.LiveTrack.list(),
-          base44.entities.Swimmer.list(),
-          base44.entities.Event.list(),
-          base44.entities.SafetyAlert.list(),
+          appRuntime.entities.LiveTrack.list(),
+          appRuntime.entities.Swimmer.list(),
+          appRuntime.entities.Event.list(),
+          appRuntime.entities.SafetyAlert.list(),
         ]);
         setTracks(tr); setSwimmers(sw); setEvents(ev); setAlerts(al);
         if (tr[0]) setSelected(tr[0].swimmer_id);

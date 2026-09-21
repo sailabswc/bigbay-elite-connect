@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { appRuntime } from "@/api/localRuntime";
 
 const POLL_MS = 4000;
 
@@ -17,8 +17,8 @@ export default function useLiveMetrics() {
     inFlight.current = true;
     setSyncing(true);
     try {
-      const res = await base44.functions.invoke("powerBiLiveSync", {});
-      const data = res.data || {};
+      const res = await appRuntime.functions.invoke("powerBiLiveSync", {});
+      const data = res?.data || {};
       if (Array.isArray(data.metrics) && data.metrics.length) {
         setMetrics(data.metrics);
         setSource(data.source || "simulated");
@@ -42,7 +42,7 @@ export default function useLiveMetrics() {
 
   // Realtime push — every viewer's board updates the instant the feed moves
   useEffect(() => {
-    const unsubscribe = base44.entities.LiveMetric.subscribe((event) => {
+    const unsubscribe = appRuntime.entities.LiveMetric.subscribe((event) => {
       if (event.type !== "update" && event.type !== "create") return;
       const incoming = event.data;
       setMetrics((prev) => {

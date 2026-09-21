@@ -1,6 +1,5 @@
 import React from "react";
 import { CheckCheck } from "lucide-react";
-import { Image } from "@/components/ui/image";
 import { cn } from "@/lib/utils";
 
 const timeLabel = (d) =>
@@ -22,7 +21,7 @@ export default function MessageBubble({ message, isMine, showSender }) {
         )}
         {message.attachment_url && (
           <div className="mb-1.5 overflow-hidden rounded-xl">
-            <Image
+            <img
               src={message.attachment_url}
               className="max-h-64 w-full object-cover"
               alt={message.attachment_name || "Attachment"}
