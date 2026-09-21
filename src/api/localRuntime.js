@@ -332,7 +332,6 @@ const entities = {
 
 const persistedUserStoreKey = `${STORAGE_PREFIX}:users`;
 const persistedSessionKey = `${STORAGE_PREFIX}:session`;
-const persistedOtpKey = `${STORAGE_PREFIX}:otp`;
 const persistedConversationsKey = `${STORAGE_PREFIX}:conversations`;
 
 const secureUser = (user) => ({
@@ -363,9 +362,6 @@ const syncUserEntity = () => {
 
 const getSessionUser = () => readStorage(persistedSessionKey, null);
 const setSessionUser = (user) => writeStorage(persistedSessionKey, user);
-
-const getOtpMap = () => readStorage(persistedOtpKey, {});
-const setOtpMap = (nextMap) => writeStorage(persistedOtpKey, nextMap);
 
 const auth = {
   async loginViaEmailPassword(email, password) {
@@ -410,36 +406,10 @@ const auth = {
     const nextUsers = [...users, user];
     writeStorage(persistedUserStoreKey, nextUsers);
     writeStorage(`${STORAGE_PREFIX}:User`, nextUsers);
-    const otpMap = getOtpMap();
-    otpMap[user.email.toLowerCase()] = '123456';
-    setOtpMap(otpMap);
-    return { status: 'registered', user: secureUser(user) };
-  },
-
-  async verifyOtp({ email, otpCode }) {
-    const recipients = getOtpMap();
-    const normalizedEmail = String(email || '').trim().toLowerCase();
-    const expected = recipients[normalizedEmail];
-    if (!expected || String(otpCode) !== String(expected)) {
-      throw new Error('Invalid verification code');
-    }
-    const users = ensureUsers();
-    const user = users.find((entry) => entry.email.toLowerCase() === normalizedEmail);
-    if (!user) {
-      throw new Error('User not found');
-    }
     const token = createSessionToken();
     setSessionUser(secureUser(user));
     writeStorage(`${STORAGE_PREFIX}:token`, token);
     return { access_token: token };
-  },
-
-  async resendOtp(email) {
-    const normalizedEmail = String(email || '').trim().toLowerCase();
-    const otpMap = getOtpMap();
-    otpMap[normalizedEmail] = '123456';
-    setOtpMap(otpMap);
-    return { status: 'resent' };
   },
 
   async resetPasswordRequest(email) {
